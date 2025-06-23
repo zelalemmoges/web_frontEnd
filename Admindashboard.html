@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaithConnect - Manage Collection Methods</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .container {
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: white;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logout-btn {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .logout-btn:hover {
+            background: #e9ecef;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #ff6b35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #212529;
+        }
+
+        .add-method-btn {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .add-method-btn:hover {
+            background: #e9ecef;
+        }
+
+        /* Payment Methods Section */
+        .payment-methods {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 24px;
+        }
+
+        .method-card {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .method-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .method-content {
+            display: flex;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .method-info {
+            flex: 1;
+            padding-right: 24px;
+        }
+
+        .method-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 8px;
+        }
+
+        .method-description {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 16px;
+        }
+
+        .method-actions {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 8px 12px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .action-link {
+            color: #495057;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .action-link:hover {
+            color: #212529;
+        }
+
+        .separator {
+            color: #dee2e6;
+            margin: 0 8px;
+        }
+
+        /* Method Images */
+        .method-image {
+            width: 280px;
+            height: 160px;
+            flex-shrink: 0;
+        }
+
+        .image-bg {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .teal-bg {
+            background: linear-gradient(135deg, #4a9b8e 0%, #6bb6a8 100%);
+        }
+
+        .peach-bg {
+            background: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
+        }
+
+        .orange-bg {
+            background: linear-gradient(135deg, #ff8c42 0%, #ff6b35 100%);
+        }
+
+        /* Phone Illustration */
+        .phone-illustration {
+            position: relative;
+        }
+
+        .phone {
+            width: 60px;
+            height: 100px;
+            background: #2c3e50;
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .phone-screen {
+            width: 50px;
+            height: 80px;
+            background: white;
+            border-radius: 4px;
+            position: absolute;
+            top: 10px;
+            left: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .document-icon {
+            font-size: 24px;
+            color: #4a9b8e;
+        }
+
+        .coin {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #ffd700;
+            border-radius: 50%;
+            top: -10px;
+            right: -15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Box Illustration */
+        .box-illustration {
+            perspective: 400px;
+        }
+
+        .box-3d {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(-15deg) rotateY(25deg);
+        }
+
+        .box-front {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: #d4a574;
+            border: 2px solid #b8956a;
+        }
+
+        .box-right {
+            position: absolute;
+            width: 40px;
+            height: 80px;
+            background: #c19660;
+            transform: rotateY(90deg) translateZ(40px);
+            border: 2px solid #a8855c;
+        }
+
+        .box-top {
+            position: absolute;
+            width: 80px;
+            height: 40px;
+            background: #e6b885;
+            transform: rotateX(90deg) translateZ(40px);
+            border: 2px solid #d4a574;
+        }
+
+        /* Check Illustration */
+        .check-illustration {
+            transform: rotate(-5deg);
+        }
+
+        .check-paper {
+            width: 120px;
+            height: 70px;
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            position: relative;
+            padding: 8px;
+        }
+
+        .check-header {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 2px;
+            margin-bottom: 8px;
+        }
+
+        .check-line {
+            width: 80%;
+            height: 2px;
+            background: #dee2e6;
+            margin-bottom: 12px;
+        }
+
+        .check-signature {
+            width: 60%;
+            height: 3px;
+            background: #495057;
+            border-radius: 1px;
+            margin-left: auto;
+        }
+
+        /* Bottom Section */
+        .bottom-section {
+            margin-top: 40px;
+        }
+
+        .manage-collectors-btn {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .manage-collectors-btn:hover {
+            background: #e9ecef;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 24px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 20px;
+            color: #212529;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4a9b8e;
+            box-shadow: 0 0 0 2px rgba(74, 155, 142, 0.2);
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .cancel-btn {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .submit-btn {
+            background: #4a9b8e;
+            border: 1px solid #4a9b8e;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            color: white;
+        }
+
+        .submit-btn:hover {
+            background: #3d8a7d;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            
+            .method-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .method-info {
+                padding-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .method-image {
+                width: 100%;
+                height: 140px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 20px 16px;
+            }
+            
+            .header {
+                padding: 12px 16px;
+            }
+            
+            .page-title {
+                font-size: 24px;
+            }
+            
+            .modal-content {
+                margin: 5% auto;
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <span class="logo-icon">▼</span>
+                <h1 class="logo">FaithConnect</h1>
+            </div>
+            <div class="header-right">
+                <button class="logout-btn">Logout</button>
+                <div class="user-avatar">👤</div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h2 class="page-title">Manage Collection Methods</h2>
+                <button class="add-method-btn">Add New Method</button>
+            </div>
+
+            <section class="payment-methods">
+                <h3 class="section-title">Ways of Payment</h3>
+
+                <!-- Charity Members -->
+                <div class="method-card">
+                    <div class="method-content">
+                        <div class="method-info">
+                            <h4 class="method-name">Charity Members</h4>
+                            <p class="method-description">Monthly donation from charity members</p>
+                            <div class="method-actions">
+                                <a href="#" class="action-link" data-action="edit">Edit</a>
+                                <span class="separator">|</span>
+                                <a href="#" class="action-link" data-action="delete">Delete</a>
+                                <span class="separator">|</span>
+                                <a href="#" class="action-link" data-action="view">View Members</a>
+                            </div>
+                        </div>
+                        <div class="method-image">
+                            <div class="image-bg teal-bg">
+                                <div class="phone-illustration">
+                                    <div class="phone">
+                                        <div class="phone-screen">
+                                            <div class="document-icon">📄</div>
+                                        </div>
+                                    </div>
+                                    <div class="coin"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Poor packet -->
+                <div class="method-card">
+                    <div class="method-content">
+                        <div class="method-info">
+                            <h4 class="method-name">Poor's pocket</h4>
+                            <p class="method-description">Monthly collected from all youth</p>
+                            <div class="method-actions">
+                                <a href="#" class="action-link" data-action="edit">Edit</a>
+                                <span class="separator">|</span>
+                                <a href="#" class="action-link" data-action="delete">Delete</a>
+                                <span class="separator">|</span>
+                                <a href="#" class="action-link" data-action="view">View Members</a>
+                            </div>
+                        </div>
+                        <div class="method-image">
+                            <div class="image-bg peach-bg">
+                                <div class="box-illustration">
+                                    <div class="box-3d">
+                                        <div class="box-top"></div>
+                                        <div class="box-front"></div>
+                                        <div class="box-right"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Outside Sponsors -->
+                <div class="method-card">
+                    <div class="method-content">
+                        <div class="method-info">
+                            <h4 class="method-name">Outside Sponsors</h4>
+                            <p class="method-description">donations from outside the church</p>
+                            <div class="method-actions">
+                                <a href="#" class="action-link" data-action="edit">Edit</a>
+                                <span class="separator">|</span>
+                                <a href="#" class="action-link" data-action="delete">Delete</a>
+                                <span class="separator">|</span>
+                                <a href="#" class="action-link" data-action="view">View Members</a>
+                            </div>
+                        </div>
+                        <div class="method-image">
+                            <div class="image-bg orange-bg">
+                                <div class="check-illustration">
+                                    <div class="check-paper">
+                                        <div class="check-header"></div>
+                                        <div class="check-line"></div>
+                                        <div class="check-signature"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="bottom-section">
+                <button class="manage-collectors-btn">Manage Collectors</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for Add New Method -->
+    <div id="addMethodModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Add New Collection Method</h3>
+            <form id="addMethodForm">
+                <div class="form-group">
+                    <label for="methodName">Method Name:</label>
+                    <input type="text" id="methodName" required>
+                </div>
+                <div class="form-group">
+                    <label for="methodDesc">Description:</label>
+                    <textarea id="methodDesc" rows="3" required></textarea>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="submit-btn">Add Method</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get modal elements
+            const modal = document.getElementById('addMethodModal');
+            const addMethodBtn = document.querySelector('.add-method-btn');
+            const closeBtn = document.querySelector('.close');
+            const cancelBtn = document.querySelector('.cancel-btn');
+            const form = document.getElementById('addMethodForm');
+
+            // Open modal
+            addMethodBtn.addEventListener('click', function() {
+                modal.style.display = 'block';
+            });
+
+            // Close modal functions
+            function closeModal() {
+                modal.style.display = 'none';
+                form.reset();
+            }
+
+            closeBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // Handle form submission
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                const methodName = document.getElementById('methodName').value;
+                const methodDesc = document.getElementById('methodDesc').value;
+                
+                // Add new method to the list
+                addNewMethod(methodName, methodDesc);
+                
+                // Close modal and reset form
+                closeModal();
+                
+                // Show success message
+                alert(`New collection method "${methodName}" has been added successfully!`);
+            });
+
+            // Handle action links
+            document.addEventListener('click', function(event) {
+                if (event.target.classList.contains('action-link')) {
+                    event.preventDefault();
+                    
+                    const action = event.target.getAttribute('data-action');
+                    const methodCard = event.target.closest('.method-card');
+                    const methodName = methodCard.querySelector('.method-name').textContent;
+                    
+                    handleAction(action, methodName, methodCard);
+                }
+            });
+
+            // Handle logout
+            document.querySelector('.logout-btn').addEventListener('click', function() {
+                if (confirm('Are you sure you want to logout?')) {
+                    alert('Logged out successfully!');
+                    // In a real app, redirect to login page
+                }
+            });
+
+            // Handle manage collectors
+            document.querySelector('.manage-collectors-btn').addEventListener('click', function() {
+                alert('Manage Collectors functionality will be implemented soon.');
+            });
+        });
+
+        function addNewMethod(name, description) {
+            const paymentMethods = document.querySelector('.payment-methods');
+            
+            // Create new method card
+            const methodCard = document.createElement('div');
+            methodCard.className = 'method-card';
+            
+            // Random background for new methods
+            const backgrounds = ['teal-bg', 'peach-bg', 'orange-bg'];
+            const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+            
+            methodCard.innerHTML = `
+                <div class="method-content">
+                    <div class="method-info">
+                        <h4 class="method-name">${name}</h4>
+                        <p class="method-description">${description}</p>
+                        <div class="method-actions">
+                            <a href="#" class="action-link" data-action="edit">Edit</a>
+                            <span class="separator">|</span>
+                            <a href="#" class="action-link" data-action="delete">Delete</a>
+                            <span class="separator">|</span>
+                            <a href="#" class="action-link" data-action="view">View Members</a>
+                        </div>
+                    </div>
+                    <div class="method-image">
+                        <div class="image-bg ${randomBg}">
+                            <div class="check-illustration">
+                                <div class="check-paper">
+                                    <div class="check-header"></div>
+                                    <div class="check-line"></div>
+                                    <div class="check-signature"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Insert before the bottom section
+            paymentMethods.appendChild(methodCard);
+        }
+
+        function handleAction(action, methodName, methodCard) {
+            switch(action) {
+                case 'edit':
+                    const newName = prompt(`Edit method name:`, methodName);
+                    if (newName && newName !== methodName) {
+                        methodCard.querySelector('.method-name').textContent = newName;
+                        alert(`Method renamed to "${newName}"`);
+                    }
+                    break;
+                    
+                case 'delete':
+                    if (confirm(`Are you sure you want to delete "${methodName}"?`)) {
+                        methodCard.remove();
+                        alert(`"${methodName}" has been deleted.`);
+                    }
+                    break;
+                    
+                case 'view':
+                    alert(`Viewing members for "${methodName}". This feature will be implemented soon.`);
+                    break;
+            }
+        }
+    </script>
+
+
+
+
+</body>
+</html>
+
+
