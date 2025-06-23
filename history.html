@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaithConnect - Payment History</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .container {
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: white;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #ff6b35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #212529;
+            margin-bottom: 16px;
+        }
+
+        .page-subtitle {
+            color: #6c757d;
+            font-size: 16px;
+            margin-bottom: 48px;
+            line-height: 1.5;
+        }
+
+        /* Payment History Table */
+        .history-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .history-table th {
+            background-color: #f8f9fa;
+            padding: 20px 24px;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 14px;
+        }
+
+        .history-table td {
+            padding: 24px;
+            border-bottom: 1px solid #f1f3f5;
+            vertical-align: middle;
+        }
+
+        .history-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .history-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .date-cell {
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .amount-cell {
+            font-weight: 600;
+            color: #212529;
+            font-size: 16px;
+        }
+
+        .status-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-badge {
+            background: #d3f9d8;
+            color: #2b8a3e;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 8px;
+            color: #495057;
+        }
+
+        .back-btn {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #495057;
+            margin-top: 24px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background: #e9ecef;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 32px 16px;
+            }
+            
+            .page-title {
+                font-size: 36px;
+            }
+
+            .history-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 28px;
+            }
+            
+            .history-table th,
+            .history-table td {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <span class="logo-icon">▼</span>
+                <h1 class="logo">FaithConnect</h1>
+            </div>
+            <div class="user-avatar">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=40&width=40" alt="User">
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h2 class="page-title">Payment History</h2>
+            <p class="page-subtitle">Review your past contributions made through this Donation method.</p>
+
+            <div class="history-container">
+                <table class="history-table" id="historyTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <!-- History data will be populated here -->
+                    </tbody>
+                </table>
+                
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <h3>No Payment History Found</h3>
+                    <p>You haven't made any payments through this method yet.</p>
+                </div>
+            </div>
+
+            <a href="#" class="back-btn" onclick="goBack()">← Back to Collection Methods</a>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load payment history from localStorage
+            function loadPaymentHistory() {
+                const stored = localStorage.getItem('faithconnect_payment_history');
+                if (stored) {
+                    return JSON.parse(stored);
+                }
+                // Default sample data
+                return [
+                    {
+                        id: 1,
+                        date: '2024-07-15',
+                        amount: 100.00,
+                        status: 'Completed',
+                        method: 'charity-member'
+                    },
+                    {
+                        id: 2,
+                        date: '2024-06-20',
+                        amount: 50.00,
+                        status: 'Completed',
+                        method: 'charity-member'
+                    },
+                    {
+                        id: 3,
+                        date: '2024-05-25',
+                        amount: 75.00,
+                        status: 'Completed',
+                        method: 'poor-packet'
+                    },
+                    {
+                        id: 4,
+                        date: '2024-04-30',
+                        amount: 120.00,
+                        status: 'Completed',
+                        method: 'outside-sponsors'
+                    },
+                    {
+                        id: 5,
+                        date: '2024-03-05',
+                        amount: 80.00,
+                        status: 'Completed',
+                        method: 'charity-member'
+                    }
+                ];
+            }
+
+            // Get selected method from localStorage
+            const selectedMethod = localStorage.getItem('selectedMethod') || 'charity-member';
+            
+            // Load all payment history
+            const allPayments = loadPaymentHistory();
+            
+            // Filter payments by selected method
+            const methodPayments = allPayments.filter(payment => payment.method === selectedMethod);
+            
+            // Render payment history table
+            function renderPaymentHistory() {
+                const tableBody = document.getElementById('historyTableBody');
+                const emptyState = document.getElementById('emptyState');
+                const table = document.getElementById('historyTable');
+
+                if (methodPayments.length === 0) {
+                    table.style.display = 'none';
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                table.style.display = 'table';
+                emptyState.style.display = 'none';
+                tableBody.innerHTML = '';
+
+                // Sort payments by date (newest first)
+                methodPayments.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                methodPayments.forEach(payment => {
+                    const row = document.createElement('tr');
+                    
+                    // Date cell
+                    const dateCell = document.createElement('td');
+                    dateCell.className = 'date-cell';
+                    const date = new Date(payment.date);
+                    dateCell.textContent = date.toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    });
+                    row.appendChild(dateCell);
+                    
+                    // Amount cell
+                    const amountCell = document.createElement('td');
+                    amountCell.className = 'amount-cell';
+                    amountCell.textContent = `$${payment.amount.toFixed(2)}`;
+                    row.appendChild(amountCell);
+                    
+                    // Status cell
+                    const statusCell = document.createElement('td');
+                    statusCell.className = 'status-cell';
+                    
+                    const statusBadge = document.createElement('span');
+                    statusBadge.className = 'status-badge';
+                    statusBadge.textContent = payment.status;
+                    
+                    statusCell.appendChild(statusBadge);
+                    row.appendChild(statusCell);
+                    
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // Initialize the table
+            renderPaymentHistory();
+        });
+
+        function goBack() {
+            window.close();
+        }
+    </script>
+</body>
+</html>

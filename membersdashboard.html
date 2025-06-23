@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaithConnect - My Collection Methods</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .container {
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: white;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #ff6b35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #212529;
+            margin-bottom: 48px;
+        }
+
+        /* Collection Method Cards */
+        .collection-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .method-card {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+        }
+
+        .method-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .method-info {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .method-status {
+            display: inline-block;
+            background: #d3f9d8;
+            color: #2b8a3e;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .method-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 8px;
+        }
+
+        .method-description {
+            color: #6c757d;
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .method-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .see-history-btn {
+            background: none;
+            border: none;
+            color: #495057;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 0;
+        }
+
+        .see-history-btn:hover {
+            color: #212529;
+        }
+
+        .see-history-btn::after {
+            content: '→';
+            font-size: 16px;
+        }
+
+        .make-payment-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .make-payment-btn:hover {
+            background: #0056b3;
+        }
+
+        /* Method Illustrations */
+        .method-illustration {
+            width: 200px;
+            height: 140px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .charity-member-bg {
+            background: linear-gradient(135deg, #ffd8a8 0%, #fdab3d 100%);
+        }
+
+        .poor-packet-bg {
+            background: linear-gradient(135deg, #ffc9c9 0%, #a8dadc 100%);
+        }
+
+        .outside-sponsors-bg {
+            background: linear-gradient(135deg, #f1e5d1 0%, #e8d5b7 100%);
+        }
+
+        /* Plant illustration for Charity Member */
+        .plant-illustration {
+            position: relative;
+        }
+
+        .plant-pot {
+            width: 80px;
+            height: 80px;
+            background: #2d3748;
+            border-radius: 8px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .plant-screen {
+            width: 60px;
+            height: 60px;
+            background: #a8e6a3;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .plant-leaf {
+            font-size: 32px;
+            color: #2d5016;
+        }
+
+        /* Phone illustration for Poor Packet */
+        .phone-illustration {
+            position: relative;
+        }
+
+        .phone-device {
+            width: 60px;
+            height: 100px;
+            background: #2d3748;
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .phone-screen {
+            width: 50px;
+            height: 80px;
+            background: #a8dadc;
+            border-radius: 8px;
+            position: absolute;
+            top: 10px;
+            left: 5px;
+        }
+
+        .phone-bars {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 2px;
+        }
+
+        .bar {
+            width: 4px;
+            background: #2d3748;
+            border-radius: 2px;
+        }
+
+        .bar:nth-child(1) { height: 8px; }
+        .bar:nth-child(2) { height: 12px; }
+        .bar:nth-child(3) { height: 16px; }
+
+        /* Hand illustration for Outside Sponsors */
+        .hand-illustration {
+            position: relative;
+        }
+
+        .hand {
+            width: 60px;
+            height: 40px;
+            background: #d4a574;
+            border-radius: 20px 20px 8px 8px;
+            position: relative;
+        }
+
+        .cup {
+            width: 24px;
+            height: 32px;
+            background: #8b4513;
+            border-radius: 0 0 12px 12px;
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .cup::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #654321;
+            border-radius: 2px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 32px 16px;
+            }
+            
+            .method-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 24px;
+            }
+            
+            .method-illustration {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 28px;
+            }
+            
+            .method-card {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <span class="logo-icon">▼</span>
+                <h1 class="logo">FaithConnect</h1>
+            </div>
+            <div class="user-avatar">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=40&width=40" alt="User">
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h2 class="page-title">My Collection Methods</h2>
+
+            <div class="collection-methods">
+                <!-- Charity Member -->
+                <div class="method-card">
+                    <div class="method-info">
+                        <span class="method-status">Active</span>
+                        <h3 class="method-name">Charity Member</h3>
+                        <p class="method-description">Monthly donation from charity members</p>
+                        <div class="method-actions">
+                            <button class="see-history-btn" onclick="goToHistory('charity-member')">See History</button>
+                            <button class="make-payment-btn" onclick="goToPayment('charity-member')">Make Payment</button>
+                        </div>
+                    </div>
+                    <div class="method-illustration charity-member-bg">
+                        <div class="plant-illustration">
+                            <div class="plant-pot">
+                                <div class="plant-screen">
+                                    <span class="plant-leaf">🌱</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Poor Packet -->
+                <div class="method-card">
+                    <div class="method-info">
+                        <span class="method-status">Active</span>
+                        <h3 class="method-name">Poor packet</h3>
+                        <p class="method-description">Monthly collected from all youth</p>
+                        <div class="method-actions">
+                            <button class="see-history-btn" onclick="goToHistory('poor-packet')">See History</button>
+                            <button class="make-payment-btn" onclick="goToPayment('poor-packet')">Make Payment</button>
+                        </div>
+                    </div>
+                    <div class="method-illustration poor-packet-bg">
+                        <div class="phone-illustration">
+                            <div class="phone-device">
+                                <div class="phone-screen">
+                                    <div class="phone-bars">
+                                        <div class="bar"></div>
+                                        <div class="bar"></div>
+                                        <div class="bar"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Outside Sponsors -->
+                <div class="method-card">
+                    <div class="method-info">
+                        <span class="method-status">Active</span>
+                        <h3 class="method-name">Outside sponsors</h3>
+                        <p class="method-description">donations from outside the church</p>
+                        <div class="method-actions">
+                            <button class="see-history-btn" onclick="goToHistory('outside-sponsors')">See History</button>
+                            <button class="make-payment-btn" onclick="goToPayment('outside-sponsors')">Make Payment</button>
+                        </div>
+                    </div>
+                    <div class="method-illustration outside-sponsors-bg">
+                        <div class="hand-illustration">
+                            <div class="hand">
+                                <div class="cup"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function goToHistory(method) {
+            // Store the selected method in localStorage
+            localStorage.setItem('selectedMethod', method);
+            // Navigate to payment history page
+            window.open('payment-history.html', '_blank');
+        }
+
+        function goToPayment(method) {
+            // Store the selected method in localStorage
+            localStorage.setItem('selectedMethod', method);
+            // Navigate to payment methods page
+            window.open('payment-methods.html', '_blank');
+        }
+    </script>
+</body>
+</html>
