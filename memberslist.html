@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaithConnect - My Assigned Members</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .container {
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: white;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logout-btn {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .logout-btn:hover {
+            background: #e9ecef;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #ff6b35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #212529;
+        }
+
+        .add-member-btn {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .add-member-btn:hover {
+            background: #e9ecef;
+        }
+
+        /* Table Styles */
+        .members-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .members-table th {
+            background-color: #f8f9fa;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .members-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f1f3f5;
+        }
+
+        .members-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .members-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .phone-number {
+            color: #6c757d;
+        }
+
+        .month-cell {
+            text-align: center;
+            position: relative;
+        }
+
+        .month-cell.paid {
+            color: #2b8a3e;
+            font-weight: 500;
+        }
+
+        .month-cell.unpaid {
+            color: #c92a2a;
+        }
+
+        .month-cell input {
+            width: 60px;
+            padding: 4px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+        }
+
+        .month-cell input:focus {
+            outline: none;
+            border-color: #4dabf7;
+            box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.2);
+        }
+
+        .actions-cell {
+            white-space: nowrap;
+        }
+
+        .action-link {
+            color: #4dabf7;
+            text-decoration: none;
+            margin-right: 12px;
+            font-size: 14px;
+        }
+
+        .action-link:hover {
+            text-decoration: underline;
+        }
+
+        .action-link.delete {
+            color: #e03131;
+        }
+
+        .total-row {
+            font-weight: 600;
+            background-color: #f8f9fa;
+        }
+
+        .total-row td {
+            border-top: 2px solid #dee2e6;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 24px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 20px;
+            color: #212529;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4dabf7;
+            box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.2);
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .cancel-btn {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .submit-btn {
+            background: #4dabf7;
+            border: 1px solid #4dabf7;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            color: white;
+        }
+
+        .submit-btn:hover {
+            background: #3b8fd6;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .members-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            
+            .main-content {
+                padding: 20px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 12px 16px;
+            }
+            
+            .page-title {
+                font-size: 24px;
+            }
+            
+            .modal-content {
+                margin: 5% auto;
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <span class="logo-icon">▼</span>
+                <h1 class="logo">FaithConnect</h1>
+            </div>
+            <div class="header-right">
+                <button class="logout-btn">Logout</button>
+                <div class="user-avatar">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=40&width=40" alt="User">
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h2 class="page-title">My Assigned Members - Group A</h2>
+                <button class="add-member-btn">Add New Member</button>
+            </div>
+
+            <div class="table-container">
+                <table class="members-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone Number</th>
+                            <th>Jan</th>
+                            <th>Feb</th>
+                            <th>Mar</th>
+                            <th>Apr</th>
+                            <th>May</th>
+                            <th>Jun</th>
+                            <th>Jul</th>
+                            <th>Aug</th>
+                            <th>Sep</th>
+                            <th>Oct</th>
+                            <th>Nov</th>
+                            <th>Dec</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="membersTableBody">
+                        <!-- Table rows will be dynamically generated -->
+                    </tbody>
+                    <tfoot>
+                        <tr class="total-row">
+                            <td colspan="2">TOTAL</td>
+                            <td class="month-cell" id="total-jan">$0</td>
+                            <td class="month-cell" id="total-feb">$0</td>
+                            <td class="month-cell" id="total-mar">$0</td>
+                            <td class="month-cell" id="total-apr">$0</td>
+                            <td class="month-cell" id="total-may">$0</td>
+                            <td class="month-cell" id="total-jun">$0</td>
+                            <td class="month-cell" id="total-jul">$0</td>
+                            <td class="month-cell" id="total-aug">$0</td>
+                            <td class="month-cell" id="total-sep">$0</td>
+                            <td class="month-cell" id="total-oct">$0</td>
+                            <td class="month-cell" id="total-nov">$0</td>
+                            <td class="month-cell" id="total-dec">$0</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Member Modal -->
+    <div id="addMemberModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Add New Member</h3>
+            <form id="addMemberForm">
+                <div class="form-group">
+                    <label for="memberName">Name:</label>
+                    <input type="text" id="memberName" required>
+                </div>
+                <div class="form-group">
+                    <label for="memberPhone">Phone Number:</label>
+                    <input type="tel" id="memberPhone" required>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="submit-btn">Add Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Payment Modal -->
+    <div id="editPaymentModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Edit Payment</h3>
+            <form id="editPaymentForm">
+                <div class="form-group">
+                    <label for="paymentAmount">Amount ($):</label>
+                    <input type="number" id="paymentAmount" min="0" step="0.01" required>
+                </div>
+                <input type="hidden" id="editMemberIndex">
+                <input type="hidden" id="editMonth">
+                <div class="form-buttons">
+                    <button type="button" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="submit-btn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sample data
+            const members = [
+                {
+                    name: "Ethan Carter",
+                    phone: "555-123-4567",
+                    payments: {
+                        jan: 50.00, feb: 0, mar: 50.00, apr: 0, may: 50.00, jun: 0,
+                        jul: 50.00, aug: 0, sep: 50.00, oct: 0, nov: 50.00, dec: 0
+                    }
+                },
+                {
+                    name: "Ethan Carter",
+                    phone: "555-123-4567",
+                    payments: {
+                        jan: 50.00, feb: 0, mar: 50.00, apr: 0, may: 50.00, jun: 0,
+                        jul: 50.00, aug: 0, sep: 50.00, oct: 0, nov: 50.00, dec: 0
+                    }
+                },
+                {
+                    name: "Ethan Carter",
+                    phone: "555-123-4567",
+                    payments: {
+                        jan: 50.00, feb: 0, mar: 50.00, apr: 0, may: 50.00, jun: 0,
+                        jul: 50.00, aug: 0, sep: 50.00, oct: 0, nov: 50.00, dec: 0
+                    }
+                },
+                {
+                    name: "Ethan Carter",
+                    phone: "555-123-4567",
+                    payments: {
+                        jan: 50.00, feb: 0, mar: 50.00, apr: 0, may: 50.00, jun: 0,
+                        jul: 50.00, aug: 0, sep: 50.00, oct: 0, nov: 50.00, dec: 0
+                    }
+                },
+                {
+                    name: "Ethan Carter",
+                    phone: "555-123-4567",
+                    payments: {
+                        jan: 50.00, feb: 0, mar: 50.00, apr: 0, may: 50.00, jun: 0,
+                        jul: 50.00, aug: 0, sep: 50.00, oct: 0, nov: 50.00, dec: 0
+                    }
+                }
+            ];
+
+            // Get modal elements
+            const addMemberModal = document.getElementById('addMemberModal');
+            const editPaymentModal = document.getElementById('editPaymentModal');
+            const addMemberBtn = document.querySelector('.add-member-btn');
+            const closeBtns = document.querySelectorAll('.close');
+            const cancelBtns = document.querySelectorAll('.cancel-btn');
+            const addMemberForm = document.getElementById('addMemberForm');
+            const editPaymentForm = document.getElementById('editPaymentForm');
+
+            // Render members table
+            function renderMembersTable() {
+                const tableBody = document.getElementById('membersTableBody');
+                tableBody.innerHTML = '';
+
+                members.forEach((member, index) => {
+                    const row = document.createElement('tr');
+                    
+                    // Name cell
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = member.name;
+                    row.appendChild(nameCell);
+                    
+                    // Phone cell
+                    const phoneCell = document.createElement('td');
+                    phoneCell.textContent = member.phone;
+                    phoneCell.className = 'phone-number';
+                    row.appendChild(phoneCell);
+                    
+                    // Month cells
+                    const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+                    months.forEach(month => {
+                        const monthCell = document.createElement('td');
+                        monthCell.className = 'month-cell';
+                        monthCell.dataset.month = month;
+                        monthCell.dataset.memberIndex = index;
+                        
+                        const amount = member.payments[month];
+                        if (amount > 0) {
+                            monthCell.textContent = `$${amount.toFixed(2)}`;
+                            monthCell.classList.add('paid');
+                        } else {
+                            monthCell.textContent = '$0.00';
+                            monthCell.classList.add('unpaid');
+                        }
+                        
+                        // Add click event to edit payment
+                        monthCell.addEventListener('click', function() {
+                            openEditPaymentModal(index, month, amount);
+                        });
+                        
+                        row.appendChild(monthCell);
+                    });
+                    
+                    // Actions cell
+                    const actionsCell = document.createElement('td');
+                    actionsCell.className = 'actions-cell';
+                    
+                    const updateLink = document.createElement('a');
+                    updateLink.href = '#';
+                    updateLink.className = 'action-link update';
+                    updateLink.textContent = 'Update';
+                    updateLink.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        alert(`Update functionality for ${member.name} will be implemented soon.`);
+                    });
+                    
+                    const deleteLink = document.createElement('a');
+                    deleteLink.href = '#';
+                    deleteLink.className = 'action-link delete';
+                    deleteLink.textContent = 'Delete';
+                    deleteLink.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        if (confirm(`Are you sure you want to delete ${member.name}?`)) {
+                            members.splice(index, 1);
+                            renderMembersTable();
+                            calculateTotals();
+                        }
+                    });
+                    
+                    actionsCell.appendChild(updateLink);
+                    actionsCell.appendChild(deleteLink);
+                    row.appendChild(actionsCell);
+                    
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // Calculate and update totals
+            function calculateTotals() {
+                const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+                
+                months.forEach(month => {
+                    let total = 0;
+                    members.forEach(member => {
+                        total += member.payments[month];
+                    });
+                    
+                    const totalCell = document.getElementById(`total-${month}`);
+                    totalCell.textContent = `$${total.toFixed(2)}`;
+                    
+                    if (total > 0) {
+                        totalCell.classList.add('paid');
+                        totalCell.classList.remove('unpaid');
+                    } else {
+                        totalCell.classList.add('unpaid');
+                        totalCell.classList.remove('paid');
+                    }
+                });
+            }
+
+            // Open add member modal
+            addMemberBtn.addEventListener('click', function() {
+                addMemberModal.style.display = 'block';
+            });
+
+            // Open edit payment modal
+            function openEditPaymentModal(memberIndex, month, amount) {
+                document.getElementById('paymentAmount').value = amount;
+                document.getElementById('editMemberIndex').value = memberIndex;
+                document.getElementById('editMonth').value = month;
+                editPaymentModal.style.display = 'block';
+            }
+
+            // Close modals
+            function closeModals() {
+                addMemberModal.style.display = 'none';
+                editPaymentModal.style.display = 'none';
+                addMemberForm.reset();
+                editPaymentForm.reset();
+            }
+
+            closeBtns.forEach(btn => {
+                btn.addEventListener('click', closeModals);
+            });
+
+            cancelBtns.forEach(btn => {
+                btn.addEventListener('click', closeModals);
+            });
+
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === addMemberModal || event.target === editPaymentModal) {
+                    closeModals();
+                }
+            });
+
+            // Handle add member form submission
+            addMemberForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                const name = document.getElementById('memberName').value;
+                const phone = document.getElementById('memberPhone').value;
+                
+                const newMember = {
+                    name: name,
+                    phone: phone,
+                    payments: {
+                        jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0,
+                        jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0
+                    }
+                };
+                
+                members.push(newMember);
+                renderMembersTable();
+                calculateTotals();
+                closeModals();
+                
+                alert(`New member "${name}" has been added successfully!`);
+            });
+
+            // Handle edit payment form submission
+            editPaymentForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                const memberIndex = document.getElementById('editMemberIndex').value;
+                const month = document.getElementById('editMonth').value;
+                const amount = parseFloat(document.getElementById('paymentAmount').value);
+                
+                members[memberIndex].payments[month] = amount;
+                renderMembersTable();
+                calculateTotals();
+                closeModals();
+            });
+
+            // Handle logout
+            document.querySelector('.logout-btn').addEventListener('click', function() {
+                if (confirm('Are you sure you want to logout?')) {
+                    alert('Logged out successfully!');
+                    // In a real app, redirect to login page
+                }
+            });
+
+            // Initialize the table
+            renderMembersTable();
+            calculateTotals();
+        });
+    </script>
+</body>
+</html>

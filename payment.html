@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConnectPoint - Payment Methods</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .container {
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: white;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .nav-link {
+            color: #495057;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #212529;
+        }
+
+        .notification-icon {
+            width: 24px;
+            height: 24px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #ff6b35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #212529;
+            margin-bottom: 48px;
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .payment-method {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .payment-method:hover {
+            border-color: #007bff;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
+        }
+
+        .payment-method.selected {
+            border-color: #007bff;
+            background-color: #f8f9ff;
+        }
+
+        .payment-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .telebirr-icon {
+            background: #2d8659;
+        }
+
+        .cbe-icon {
+            background: #2d8659;
+        }
+
+        .paypal-icon {
+            background: #0070ba;
+        }
+
+        .payment-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .radio-indicator {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #dee2e6;
+            border-radius: 50%;
+            margin-left: auto;
+            position: relative;
+        }
+
+        .payment-method.selected .radio-indicator {
+            border-color: #007bff;
+        }
+
+        .payment-method.selected .radio-indicator::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: #007bff;
+            border-radius: 50%;
+        }
+
+        /* Continue Button */
+        .continue-btn {
+            width: 100%;
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .continue-btn:hover {
+            background: #0056b3;
+        }
+
+        .continue-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 32px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 20px;
+            color: #212529;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 32px;
+        }
+
+        .cancel-btn {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .submit-btn {
+            background: #007bff;
+            border: 1px solid #007bff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: white;
+        }
+
+        .submit-btn:hover {
+            background: #0056b3;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-nav {
+                gap: 16px;
+            }
+            
+            .nav-links {
+                gap: 16px;
+            }
+            
+            .main-content {
+                padding: 32px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .page-title {
+                font-size: 28px;
+            }
+            
+            .modal-content {
+                margin: 5% auto;
+                width: 95%;
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <span class="logo-icon">✦</span>
+                <h1 class="logo">ConnectPoint</h1>
+            </div>
+            <div class="header-nav">
+                <nav class="nav-links">
+
+                </nav>
+                <div class="notification-icon">🔔</div>
+                <div class="user-avatar">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=40&width=40" alt="User">
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h2 class="page-title">Payment Methods</h2>
+
+            <div class="payment-methods">
+                <!-- Telebirr -->
+                <div class="payment-method" data-method="telebirr">
+                    <div class="payment-icon telebirr-icon">T</div>
+                    <div class="payment-name">Telebirr</div>
+                    <div class="radio-indicator"></div>
+                </div>
+
+                <!-- Commercial Bank of Ethiopia -->
+                <div class="payment-method" data-method="cbe">
+                    <div class="payment-icon cbe-icon">CBE</div>
+                    <div class="payment-name">Commercial Bank of Ethiopia</div>
+                    <div class="radio-indicator"></div>
+                </div>
+
+                <!-- PayPal -->
+                <div class="payment-method" data-method="paypal">
+                    <div class="payment-icon paypal-icon">PP</div>
+                    <div class="payment-name">PayPal</div>
+                    <div class="radio-indicator"></div>
+                </div>
+            </div>
+
+            <button class="continue-btn" id="continueBtn" disabled>Continue</button>
+        </main>
+    </div>
+
+    <!-- Payment Details Modal -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 id="paymentModalTitle">Complete Payment</h3>
+            <form id="paymentForm">
+                <div class="form-group">
+                    <label for="paymentAmount">Amount ($):</label>
+                    <input type="number" id="paymentAmount" min="1" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="paymentCategory">Category:</label>
+                    <select id="paymentCategory" required>
+                        <option value="">Select category</option>
+                        <option value="tithe">Tithe</option>
+                        <option value="offering">Offering</option>
+                        <option value="missions">Missions</option>
+                        <option value="building-fund">Building Fund</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="paymentNote">Note (optional):</label>
+                    <input type="text" id="paymentNote" placeholder="Add a note...">
+                </div>
+                <input type="hidden" id="selectedPaymentMethod">
+                <input type="hidden" id="selectedCollectionMethod">
+                <div class="form-buttons">
+                    <button type="button" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="submit-btn">Process Payment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let selectedMethod = null;
+            const continueBtn = document.getElementById('continueBtn');
+            const paymentMethods = document.querySelectorAll('.payment-method');
+            const modal = document.getElementById('paymentModal');
+            const closeBtn = document.querySelector('.close');
+            const cancelBtn = document.querySelector('.cancel-btn');
+            const paymentForm = document.getElementById('paymentForm');
+
+            // Handle payment method selection
+            paymentMethods.forEach(method => {
+                method.addEventListener('click', function() {
+                    // Remove selected class from all methods
+                    paymentMethods.forEach(m => m.classList.remove('selected'));
+                    
+                    // Add selected class to clicked method
+                    this.classList.add('selected');
+                    
+                    // Store selected method
+                    selectedMethod = this.getAttribute('data-method');
+                    
+                    // Enable continue button
+                    continueBtn.disabled = false;
+                });
+            });
+
+            // Handle continue button
+            continueBtn.addEventListener('click', function() {
+                if (selectedMethod) {
+                    openPaymentModal(selectedMethod);
+                }
+            });
+
+            // Open payment modal
+            function openPaymentModal(method) {
+                const methodNames = {
+                    'telebirr': 'Telebirr',
+                    'cbe': 'Commercial Bank of Ethiopia',
+                    'paypal': 'PayPal'
+                };
+                
+                document.getElementById('paymentModalTitle').textContent = `Complete Payment - ${methodNames[method]}`;
+                document.getElementById('selectedPaymentMethod').value = method;
+                
+                // Get collection method from localStorage
+                const collectionMethod = localStorage.getItem('selectedMethod') || 'charity-member';
+                document.getElementById('selectedCollectionMethod').value = collectionMethod;
+                
+                paymentForm.reset();
+                modal.style.display = 'block';
+            }
+
+            // Close modal functions
+            function closeModal() {
+                modal.style.display = 'none';
+                paymentForm.reset();
+            }
+
+            closeBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // Handle payment form submission
+            paymentForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                const amount = parseFloat(document.getElementById('paymentAmount').value);
+                const category = document.getElementById('paymentCategory').value;
+                const note = document.getElementById('paymentNote').value;
+                const paymentMethod = document.getElementById('selectedPaymentMethod').value;
+                const collectionMethod = document.getElementById('selectedCollectionMethod').value;
+                
+                // Save payment to localStorage
+                savePayment({
+                    id: Date.now(),
+                    date: new Date().toISOString().split('T')[0],
+                    amount: amount,
+                    category: category,
+                    note: note,
+                    paymentMethod: paymentMethod,
+                    method: collectionMethod,
+                    status: 'Completed'
+                });
+                
+                closeModal();
+                
+                // Show success message
+                alert(`Payment of $${amount.toFixed(2)} processed successfully via ${paymentMethod}!`);
+                
+                // Reset selection
+                paymentMethods.forEach(m => m.classList.remove('selected'));
+                selectedMethod = null;
+                continueBtn.disabled = true;
+            });
+
+            // Save payment to localStorage
+            function savePayment(payment) {
+                let payments = JSON.parse(localStorage.getItem('faithconnect_payment_history') || '[]');
+                payments.push(payment);
+                localStorage.setItem('faithconnect_payment_history', JSON.stringify(payments));
+            }
+
+            // Handle navigation links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.textContent;
+                    alert(`Navigating to ${page} page...`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
